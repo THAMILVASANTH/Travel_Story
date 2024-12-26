@@ -8,13 +8,12 @@ const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./utilities")
 
 const User = require("./models/user.model");
+const TravelStory = require("./models/travelStory.model")
 
-// MongoDB Connection
 mongoose.connect(config.connectionString)
     .then(() => console.log("Connected to MongoDB"))
     .catch(err => console.error("Failed to connect to MongoDB:", err));
 
-// Express App Setup
 const app = express();
 app.use(express.json());
 app.use(cors({ origin: "*" }));
@@ -110,6 +109,34 @@ app.get("/get-user", authenticateToken, async (req, res) => {
         user: isUser,
         message: "",
     })
+})
+
+// Add Travel Story
+app.post("/add-travel-story", authenticateToken, async (req, res) => {
+    const { title, story, visitedLocation, imageUrl, visitedDate } = req.body
+    const { userId } = req.user
+
+    if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
+        return res.status(400).json({ error: true, message: "All fields are required" })
+    }
+
+    const parsedVisitedDate = new Date(parseInt(visitedDate))
+
+    try {
+        const travelStory = new TravelStory({
+            title,
+            story,
+            visitedLocation,
+            userId,
+            imageUrl,
+            visitedDate: parsedVisitedDate,
+        })
+        await travelStory.save()
+        res.status(201).json({ story: travelStory, message: "Added Successfully" })
+    }
+    catch (error) {
+        res.status(400).json({ error: true, message: error.message })
+    }
 })
 
 
