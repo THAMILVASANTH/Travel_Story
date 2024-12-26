@@ -5,11 +5,12 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const { authenticateToken } = require("./utilities")
 
 const User = require("./models/user.model");
 
 // MongoDB Connection
-mongoose.connect(config.connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.connectionString)
     .then(() => console.log("Connected to MongoDB"))
     .catch(err => console.error("Failed to connect to MongoDB:", err));
 
@@ -94,6 +95,23 @@ app.post("/login", async (req, res) => {
         accessToken,
     })
 })
+
+// Get User
+app.get("/get-user", authenticateToken, async (req, res) => {
+    const { userId } = req.user
+
+    const isUser = await User.findOne({ _id: userId })
+
+    if (!isUser) {
+        return res.sendStatus(401)
+    }
+
+    return res.json({
+        user: isUser,
+        message: "",
+    })
+})
+
 
 app.listen(8000, () => {
     console.log("Server is running on port 8000");
