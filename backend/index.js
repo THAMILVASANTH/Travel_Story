@@ -157,7 +157,6 @@ app.delete("/delete-image", async (req, res) => {
 //Server static files from uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 
-
 // Add Travel Story
 app.post("/add-travel-story", authenticateToken, async (req, res) => {
     const { title, story, visitedLocation, imageUrl, visitedDate } = req.body
@@ -198,6 +197,38 @@ app.get("/get-all-stories", authenticateToken, async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: true, message: error.message })
     }
+})
+
+// Edit Travel Story
+app.post("/edit-story/:id", authenticateToken, async (req, res) => {
+    const {id}=req.params
+    const { title, story, visitedLocation, imageUrl, visitedDate } = req.body
+    const {userId}=req.user
+
+    if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
+        return res.status(400).json({ error: true, message: "All fields are required" })
+    }
+
+    const parsedVisitedDate=new Date(parseInt(visitedDate))
+
+    try{
+        const travelStory=await TravelStory.findOne({_id:id,userId:userId})
+        if(!travelStory){
+            return res.status(404).json({error:true,message:"Travel story not found"})
+        }
+        travelStory.title=title
+        travelStory.story=story
+        travelStory.visitedLocation=visitedLocation
+        travelStory.imageUrl=imageUrl
+        travelStory.visitedDate=visitedDate
+
+        await travelStory.save()
+        res.status(200).json({story:travelStory,message:"Update Successful"})
+    }
+    catch(error){
+        res.status(500).json({error:true,message:error.message})
+    }
+
 })
 
 
