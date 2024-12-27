@@ -6,9 +6,13 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const { authenticateToken } = require("./utilities")
+const upload = require("./multer")
+const fs = require("fs")
+const path = require("path")
 
 const User = require("./models/user.model");
-const TravelStory = require("./models/travelStory.model")
+const TravelStory = require("./models/travelStory.model");
+const { error } = require("console");
 
 mongoose.connect(config.connectionString)
     .then(() => console.log("Connected to MongoDB"))
@@ -111,6 +115,49 @@ app.get("/get-user", authenticateToken, async (req, res) => {
     })
 })
 
+// Route to handle image upload
+app.post("/image-upload", upload.single("image"), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: true, message: "No image uploaded" })
+        }
+        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+
+        res.status(201).json({ imageUrl })
+    }
+    catch (error) {
+        res.status(500).json({ error: true, message: error.message })
+    }
+})
+
+//Delete an image
+app.delete("/delete-image", async (req, res) => {
+    const { imageUrl } = req.query
+
+    if (!imageUrl) {
+        return res.status(400).json({ error: true, message: "imageUrl parameter is required" })
+    }
+
+    try {
+        const filename = path.basename(imageUrl)
+        const filePath = path.join(__dirname, 'uploads', filename);
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath)
+            res.status(200).json({ message: "Image deleted successfully" })
+        } else {
+            res.status(200).json({ error: true, message: "Image not found" })
+        }
+
+    } catch (error) {
+        res.status(500).json({ error: true, message: error.message })
+    }
+})
+
+//Server static files from uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
+
+
 // Add Travel Story
 app.post("/add-travel-story", authenticateToken, async (req, res) => {
     const { title, story, visitedLocation, imageUrl, visitedDate } = req.body
@@ -152,7 +199,6 @@ app.get("/get-all-stories", authenticateToken, async (req, res) => {
         res.status(500).json({ error: true, message: error.message })
     }
 })
-
 
 
 app.listen(8000, () => {
