@@ -299,6 +299,30 @@ app.put("/update-isFav/:id", authenticateToken, async (req, res) => {
   }
 });
 
+// Search travel stories
+app.get("/search", authenticateToken, async (req, res) => {
+  const { query } = req.query;
+  const { userId } = req.user;
+
+  if (!query) {
+    return res.status(404).json({ error: true, message: "query to required" });
+  }
+  try {
+    const searchResults = await TravelStory.find({
+      userId: userId,
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { story: { $regex: query, $options: "i" } },
+        { visitedLocation: { $regex: query, $options: "i" } },
+      ],
+    }).sort({ isFavourite: -1 });
+
+    res.status(200).json({ stories: searchResults });
+  } catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+});
+
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 });
