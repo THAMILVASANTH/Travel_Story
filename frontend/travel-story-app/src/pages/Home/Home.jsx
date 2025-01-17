@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
-import { useNavigate } from "react-router-dom";
+import { data, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import TravelStoryCard from "../../components/Cards/TravelStoryCard";
 import { ToastContainer, toast } from "react-toastify";
@@ -18,6 +18,11 @@ const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
     isShown: false,
     type: "add",
+    data: null,
+  });
+
+  const [openViewModal, setOpenViewModal] = useState({
+    isShown: false,
     data: null,
   });
 
@@ -78,7 +83,7 @@ const Home = () => {
 
   // Handle view story (future implementation)
   const handleViewStory = (data) => {
-    console.log("View story:", data);
+    setOpenViewModal({ isShown: true, data });
   };
 
   useEffect(() => {
@@ -106,7 +111,6 @@ const Home = () => {
                     date={item.visitedDate}
                     visitedLocation={item.visitedLocation}
                     isFavourite={item.isFavourite}
-                    onEdit={() => handleEdit(item)}
                     onClick={() => handleViewStory(item)}
                     onFavouriteClick={() => updateIsFavourite(item)}
                   />

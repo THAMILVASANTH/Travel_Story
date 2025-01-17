@@ -15,7 +15,7 @@ const DateSelector = ({ date, setDate }) => {
       >
         <MdOutlineDateRange className="text-lg" />
         {date
-          ? moment(date).format("DD MMM YYY")
+          ? moment(date).format("DD MMM YYYY")
           : moment().format("DD MMM YYYY")}
       </button>
 
