@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 import AddEditTravelStory from "./AddEditTravelStory";
+import ViewTravelStory from "./ViewTravelStory";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -148,6 +149,33 @@ const Home = () => {
             setOpenAddEditModal({ isShown: false, type: "add", data: null })
           }
           getAllTravelStories={getAllTravelStories}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={openViewModal.isShown}
+        onRequestClose={() =>
+          setOpenAddEditModal({ isShown: false, type: "add", data: null })
+        }
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+            zIndex: 999,
+          },
+        }}
+        appElement={document.getElementById("root")}
+        className="model-box"
+      >
+        <ViewTravelStory
+          storyInfo={openViewModal.data || null}
+          onClose={() => {
+            setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+          }}
+          onEditClick={() => {
+            setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+            handleEdit(openViewModal.data || null);
+          }}
+          onDeleteClick={() => {}}
         />
       </Modal>
 
