@@ -9,6 +9,9 @@ import { MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 import AddEditTravelStory from "./AddEditTravelStory";
 import ViewTravelStory from "./ViewTravelStory";
+import EmptyCard from "../../components/Cards/EmptyCard";
+
+import EmptyImg from "../../assets/images/add-story.svg";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -87,6 +90,27 @@ const Home = () => {
     setOpenViewModal({ isShown: true, data });
   };
 
+  // Delete travel story
+  const deleteTravelStory = async (data) => {
+    const storyId = data._id;
+
+    try{
+    const response = await axiosInstance.delete("/delete-story/" + storyId);
+
+    if (response.data && !response.data.error) {
+      toast.error("Story deleted successfully");
+      setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+      getAllTravelStories();
+      
+    }
+  }
+  catch (error) {
+    
+      console.log("An unexpected error occurred. Please try again.");
+    
+  }
+} 
+
   useEffect(() => {
     getUserInfo();
     getAllTravelStories();
@@ -118,9 +142,9 @@ const Home = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center text-gray-500">
-                No travel stories found. Start by adding one!
-              </div>
+              <EmptyCard imgSrc={EmptyImg} 
+              message={`Start creating your first Travel Story! Click the 'Add' button to jot down your thoughts, ideas, and memories. Let's get started!`}
+              />
             )}
           </div>
 
@@ -175,7 +199,9 @@ const Home = () => {
             setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
             handleEdit(openViewModal.data || null);
           }}
-          onDeleteClick={() => {}}
+          onDeleteClick={() => {
+            deleteTravelStory(openViewModal.data || null);
+          }}
         />
       </Modal>
 

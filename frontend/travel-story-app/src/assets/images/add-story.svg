@@ -1,11 +1,16 @@
-<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="100" height="100" rx="50" fill="#E9FCFF">
-<g clip-path="url(#clip0_78_174)">
-<path d="M43.75 33.3333V36.2083C42.0208 35.5208 40.1667 35.1666 38.3125 35.1666C34.5833 35.1666 30.8542 ">
-</g>
-<defs>
-<clipPath id="clip0_78_174">
-<rect width="50" height="50" fill="white" transform="translate(25 25)"/>
-</clipPath>
-</defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Circle Background -->
+  <circle cx="50" cy="50" r="50" fill="#E6F9FF" />
+
+  <!-- Icon: Pen on a Paper -->
+  <!-- Paper Rectangle -->
+  <rect x="30" y="30" width="40" height="40" rx="5" ry="5" fill="white" stroke="#00C4FF" stroke-width="2" />
+
+  <!-- Pen Path -->
+  <path d="M55 35 L65 25 Q67 23 69 25 L70 26 Q72 28 70 30 L60 40 Z" fill="#00C4FF" />
+  <line x1="55" y1="35" x2="60" y2="40" stroke="#00C4FF" stroke-width="2" />
+
+  <!-- Lines on Paper -->
+  <line x1="35" y1="50" x2="65" y2="50" stroke="#00C4FF" stroke-width="2" />
+  <line x1="35" y1="55" x2="65" y2="55" stroke="#00C4FF" stroke-width="2" />
 </svg>
