@@ -18,6 +18,9 @@ const Home = () => {
 
   const [userInfo, setUserInfo] = useState(null);
   const [allStories, setAllStories] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [openAddEditModal, setOpenAddEditModal] = useState({
     isShown: false,
@@ -118,7 +121,11 @@ const Home = () => {
 
   return (
     <>
-      <Navbar userInfo={userInfo} />
+      <Navbar 
+      userInfo={userInfo}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
+      />
 
       <div className="container mx-auto py-10">
         <div className="flex gap-7">
