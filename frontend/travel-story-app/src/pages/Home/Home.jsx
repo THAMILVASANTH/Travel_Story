@@ -20,6 +20,7 @@ const Home = () => {
   const [allStories, setAllStories] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -97,22 +98,40 @@ const Home = () => {
   const deleteTravelStory = async (data) => {
     const storyId = data._id;
 
-    try{
-    const response = await axiosInstance.delete("/delete-story/" + storyId);
+    try {
+      const response = await axiosInstance.delete("/delete-story/" + storyId);
 
-    if (response.data && !response.data.error) {
-      toast.error("Story deleted successfully");
-      setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
-      getAllTravelStories();
-      
-    }
-  }
-  catch (error) {
-    
+      if (response.data && !response.data.error) {
+        toast.error("Story deleted successfully");
+        setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+        getAllTravelStories();
+      }
+    } catch (error) {
       console.log("An unexpected error occurred. Please try again.");
-    
-  }
-} 
+    }
+  };
+
+  // Search Story
+  const onSearchStory = async (query) => {
+    try {
+      const response = await axiosInstance.get("/search", {
+        params: {
+          query,
+        },
+      });
+      if (response.data && response.data.stories) {
+        setFilterType("search");
+        setAllStories(response.data.stories);
+      }
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again.");
+    }
+  };
+
+  const handleClearSearch = () => {
+    setFilterType("");
+    getAllTravelStories();
+  };
 
   useEffect(() => {
     getUserInfo();
@@ -121,10 +140,12 @@ const Home = () => {
 
   return (
     <>
-      <Navbar 
-      userInfo={userInfo}
-      searchQuery={searchQuery}
-      setSearchQuery={setSearchQuery}
+      <Navbar
+        userInfo={userInfo}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearchNote={onSearchStory}
+        handleClearSearch={handleClearSearch}
       />
 
       <div className="container mx-auto py-10">
@@ -149,8 +170,9 @@ const Home = () => {
                 ))}
               </div>
             ) : (
-              <EmptyCard imgSrc={EmptyImg} 
-              message={`Start creating your first Travel Story! Click the 'Add' button to jot down your thoughts, ideas, and memories. Let's get started!`}
+              <EmptyCard
+                imgSrc={EmptyImg}
+                message={`Start creating your first Travel Story! Click the 'Add' button to jot down your thoughts, ideas, and memories. Let's get started!`}
               />
             )}
           </div>

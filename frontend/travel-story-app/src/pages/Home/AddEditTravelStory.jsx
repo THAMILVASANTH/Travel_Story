@@ -49,21 +49,20 @@ const AddEditTravelStory = ({
         onClose();
       }
     } catch (error) {
-      if(
+      if (
         error.response &&
-         error.response.data &&
-          error.response.data.message
-      ){
+        error.response.data &&
+        error.response.data.message
+      ) {
         setError(error.response.data.message);
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
     }
   };
+
   const updateTravelStory = async () => {
-
     const storyId = storyInfo._id;
-
     try {
       let imageUrl = "";
 
@@ -75,44 +74,42 @@ const AddEditTravelStory = ({
         visitedDate: visitedDate
           ? moment(visitedDate).valueOf()
           : moment().valueOf(),
-      }
+      };
 
-      if(typeof storyImg === "object") {
+      if (typeof storyImg === "object") {
         const imgUploadRes = await uploadImage(storyImg);
         imageUrl = imgUploadRes.imageUrl || "";
 
         postData = {
           ...postData,
           imageUrl: imageUrl,
-        }
-
+        };
       }
 
       const response = await axiosInstance.put(
         "/edit-story/" + storyId,
-         postData
+        postData
       );
 
       if (response.data && response.data.story) {
-        toast.success("Story updated Successfully");
+        toast.success("Story Updated Successfully");
         getAllTravelStories();
         onClose();
       }
     } catch (error) {
       console.log(error);
 
-      if(
+      if (
         error.response &&
-         error.response.data &&
-          error.response.data.message
-      ){
+        error.response.data &&
+        error.response.data.message
+      ) {
         setError(error.response.data.message);
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
     }
   };
-  
 
   const handleAddOrUpdateClick = () => {
     console.log("Input Data:", {
@@ -143,16 +140,15 @@ const AddEditTravelStory = ({
   };
 
   const handleDeleteStoryImg = async () => {
-
     const deleteImgRes = await axiosInstance.delete("/delete-image", {
       params: {
         imageUrl: storyInfo.imageUrl,
       },
     });
-    if(deleteImgRes.data){
+    if (deleteImgRes.data) {
       const storyId = storyInfo._id;
 
-      const postData ={
+      const postData = {
         title,
         story,
         visitedLocation,
