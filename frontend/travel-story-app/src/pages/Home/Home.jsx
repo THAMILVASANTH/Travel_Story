@@ -154,7 +154,7 @@ const Home = () => {
             {loading ? (
               <div>Loading stories...</div>
             ) : allStories.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 px-12">
                 {allStories.map((item) => (
                   <TravelStoryCard
                     key={item._id}
