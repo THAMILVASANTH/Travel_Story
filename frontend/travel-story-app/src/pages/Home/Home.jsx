@@ -1,22 +1,23 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
+import { MdAdd } from "react-icons/md";
+import Modal from "react-modal";
 import TravelStoryCard from "../../components/Cards/TravelStoryCard";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { MdAdd, MdDateRange } from "react-icons/md";
-import Modal from "react-modal";
 import AddEditTravelStory from "./AddEditTravelStory";
 import ViewTravelStory from "./ViewTravelStory";
 import EmptyCard from "../../components/Cards/EmptyCard";
 
-import EmptyImg from "../../assets/images/add-story.svg";
 import { DayPicker } from "react-day-picker";
 import moment from "moment";
 import "react-day-picker/dist/style.css";
 import "../../index.css";
 import FilterInfoTitle from "../../components/Cards/FilterInfoTitle";
+import { getEmptyCardImg, getEmptyCardMessage } from "../../utils/helper";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -77,12 +78,20 @@ const Home = () => {
   const updateIsFavourite = async (storyData) => {
     const storyId = storyData._id;
     try {
-      await axiosInstance.put(`/update-isFav/${storyId}`, {
+      const response = await axiosInstance.put(`/update-isFav/${storyId}`, {
         isFavourite: !storyData.isFavourite,
       });
+      if (response.data && response.data.story) {
+        toast.success("Story updated successfully.");
 
-      toast.success("Story updated successfully.");
-      getAllTravelStories();
+        if (filterType === "search" && searchQuery) {
+          onSearchStory(searchQuery);
+        } else if (filterType === "date") {
+          filterStoriesByDate(dateRange);
+        } else {
+          getAllTravelStories();
+        }
+      }
     } catch (error) {
       toast.error("Failed to update story. Please try again.");
     }
@@ -176,7 +185,7 @@ const Home = () => {
   const resetFilter = () => {
     setDateRange({ from: null, to: null });
     setFilterType("");
-    filterStoriesByDate();
+    getAllTravelStories();
   };
 
   useEffect(() => {
@@ -194,7 +203,7 @@ const Home = () => {
         handleClearSearch={handleClearSearch}
       />
 
-      <div className="container mx-auto py-15 p-10">
+      <div className="container mx-auto p-10">
         <FilterInfoTitle
           filterType={filterType}
           filterDates={dateRange}
@@ -225,8 +234,8 @@ const Home = () => {
               </div>
             ) : (
               <EmptyCard
-                imgSrc={EmptyImg}
-                message={`Start creating your first Travel Story! Click the 'Add' button to jot down your thoughts, ideas, and memories. Let's get started!`}
+                imgSrc={getEmptyCardImg(filterType)}
+                message={getEmptyCardMessage(filterType)}
               />
             )}
           </div>
