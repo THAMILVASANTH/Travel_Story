@@ -5,8 +5,9 @@ import ProfileInfo from "./Cards/ProfileInfo";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "./Input/SearchBar";
 
-const Navbar = ({ userInfo, 
-  searchQuery, 
+const Navbar = ({
+  userInfo,
+  searchQuery,
   setSearchQuery,
   onSearchNote,
   handleClearSearch
@@ -34,18 +35,18 @@ const Navbar = ({ userInfo,
       <img src={LOGO} alt="travel story" className="h-9" />
 
       {isToken && (
-      <>
-        <SearchBar 
-          value={searchQuery}
-          onChange={({ target }) => {
-            setSearchQuery(target.value);
-          }}
-          handleSearch={handleSearch}
-          onClearSearch={onClearSearch}
-        />
-      <ProfileInfo userInfo={userInfo} onLogout={onLogout} /> 
-      </>
-    )}
+        <>
+          <SearchBar
+            value={searchQuery}
+            onChange={({ target }) => {
+              setSearchQuery(target.value);
+            }}
+            handleSearch={handleSearch}
+            onClearSearch={onClearSearch}
+          />
+          <ProfileInfo userInfo={userInfo} onLogout={onLogout} />
+        </>
+      )}
     </div>
   );
 };

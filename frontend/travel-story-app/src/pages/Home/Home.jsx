@@ -102,18 +102,15 @@ const Home = () => {
   const deleteTravelStory = async (data) => {
     const storyId = data._id;
 
-    try{
-    const response = await axiosInstance.delete("/delete-story/" + storyId);
+    try {
+      const response = await axiosInstance.delete("/delete-story/" + storyId);
 
-    if (response.data && !response.data.error) {
-      toast.error("Story deleted successfully");
-      setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
-      getAllTravelStories();
-      
-    }
-  }
-  catch (error) {
-    
+      if (response.data && !response.data.error) {
+        toast.error("Story deleted successfully");
+        setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+        getAllTravelStories();
+      }
+    } catch (error) {
       console.log("An unexpected error occurred. Please try again.");
     
   }
@@ -198,7 +195,7 @@ const Home = () => {
             {loading ? (
               <div>Loading stories...</div>
             ) : allStories.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 px-12">
                 {allStories.map((item) => (
                   <TravelStoryCard
                     key={item._id}
@@ -214,8 +211,9 @@ const Home = () => {
                 ))}
               </div>
             ) : (
-              <EmptyCard imgSrc={EmptyImg} 
-              message={`Start creating your first Travel Story! Click the 'Add' button to jot down your thoughts, ideas, and memories. Let's get started!`}
+              <EmptyCard
+                imgSrc={EmptyImg}
+                message={`Start creating your first Travel Story! Click the 'Add' button to jot down your thoughts, ideas, and memories. Let's get started!`}
               />
             )}
           </div>
