@@ -5,11 +5,26 @@
 @tailwind utilities;
 
 .rdp-root {
+  --rdp-font-family: "Poppins", sans-serif; /* Ensures Poppins is applied */
+  --rdp-selected-font: bold 500 "Poppins", sans-serif;
   --rdp-accent-color: #01b0cb;
   --rdp-accent-background-color: #dffbff;
   --rdp-day_button-border-radius: 8px;
-  --rdp-selected-font: bold medium var(--rdp-font-family);
 }
+
+.rdp-day {
+  font-family: var(--rdp-font-family);
+  font-weight: 500; /* Medium weight for better readability */
+  color: #333; /* Darker text color for contrast */
+}
+
+.rdp-day_selected {
+  background-color: var(--rdp-accent-background-color);
+  color: var(--rdp-accent-color);
+  border-radius: var(--rdp-day_button-border-radius);
+  font-weight: bold;
+}
+
 
 @layer base {
   html {
@@ -61,4 +76,5 @@
   .btn-delete {
     @apply bg-rose-50 text-rose-500 shadow-rose-100/0 border border-rose-100 hover:bg-rose-500 hover:text-white;
   }
+  
 }

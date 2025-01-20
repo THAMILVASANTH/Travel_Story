@@ -14,6 +14,8 @@ import EmptyCard from "../../components/Cards/EmptyCard";
 import EmptyImg from "../../assets/images/add-story.svg";
 import { DayPicker } from "react-day-picker";
 import moment from "moment";
+import "react-day-picker/dist/style.css";
+import "../../index.css";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -22,9 +24,9 @@ const Home = () => {
   const [allStories, setAllStories] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState('');
+  const [filterType, setFilterType] = useState("");
 
-  const [dateRange, setDateRange] = useState({form: null, to: null});
+  const [dateRange, setDateRange] = useState({ form: null, to: null });
 
   const [loading, setLoading] = useState(false);
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -112,28 +114,24 @@ const Home = () => {
       }
     } catch (error) {
       console.log("An unexpected error occurred. Please try again.");
-    
-  }
+    }
   };
 
   // Search travel story
   const onSearchStory = async (query) => {
-    try{
+    try {
       const response = await axiosInstance.get("/search", {
         params: {
-           query,
-         },
+          query,
+        },
       });
-  
-      if (response.data && response.data.stories) {    
+
+      if (response.data && response.data.stories) {
         setFilterType("search");
         setAllStories(response.data.stories);
       }
-    }
-    catch (error) {
-      
-        console.log("An unexpected error occurred. Please try again.");
-      
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again.");
     }
   };
 
@@ -149,8 +147,8 @@ const Home = () => {
       const startDate = day.from ? moment(day.from).valueOf() : null;
       const endDate = day.to ? moment(day.to).valueOf() : null;
 
-      if(startDate && endDate) {
-        const response = await axiosInstance.get("/travel-stories/filter", {
+      if (startDate && endDate) {
+        const response = await axiosInstance.get("/filter", {
           params: {
             startDate,
             endDate,
@@ -162,7 +160,6 @@ const Home = () => {
           setAllStories(response.data.stories);
         }
       }
-      
     } catch (error) {
       console.log("An unexpected error occurred. Please try again.");
     }
@@ -181,12 +178,12 @@ const Home = () => {
 
   return (
     <>
-      <Navbar 
-      userInfo={userInfo}
-      searchQuery={searchQuery}
-      setSearchQuery={setSearchQuery}
-      onSearchNote={onSearchStory}
-      handleClearSearch={handleClearSearch}
+      <Navbar
+        userInfo={userInfo}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onSearchNote={onSearchStory}
+        handleClearSearch={handleClearSearch}
       />
 
       <div className="container mx-auto py-15 p-10">
@@ -219,17 +216,18 @@ const Home = () => {
           </div>
 
           <div className="w-[350px]">
-           <div className="bg-white border border-slate-200 shadow-lg shadow-slate-200/60 rounded-lg">
-            <div className="p-3">
-              <DayPicker
-                captionLayout="dropdown-buttons"
-                mode="range"
-                selected={dateRange}
-                onSelect={handleDayClick}
-                pagedNavigation
+            <div className="bg-white border border-slate-200 shadow-lg  shadow-slate-200/60 rounded-lg">
+              <div className="p-3">
+                <DayPicker
+                  captionLayout="dropdown-buttons"
+                  mode="range"
+                  selected={dateRange}
+                  onSelect={handleDayClick}
+                  pagedNavigation
+                  className="rdp-root"
                 />
+              </div>
             </div>
-           </div>
           </div>
         </div>
       </div>
