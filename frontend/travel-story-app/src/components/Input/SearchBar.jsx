@@ -20,10 +20,7 @@ const SearchBar=({value, onChange, handleSearch, onClearSearch})=> {
         />
       )}
 
-        {
-          value && <IoMdClose className='text-xl text-slate-500 cursor-pointer hover:text-black mr-3' onClick={onClearSearch} />
-        }
-
+        
         <FaMagnifyingGlass className='text-slate-400 cursor-pointer hover:text-black' onClick={handleSearch}/>
     </div>
   );

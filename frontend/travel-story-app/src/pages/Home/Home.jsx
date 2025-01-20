@@ -16,6 +16,7 @@ import { DayPicker } from "react-day-picker";
 import moment from "moment";
 import "react-day-picker/dist/style.css";
 import "../../index.css";
+import FilterInfoTitle from "../../components/Cards/FilterInfoTitle";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("");
 
-  const [dateRange, setDateRange] = useState({ form: null, to: null });
+  const [dateRange, setDateRange] = useState({ from: null, to: null });
 
   const [loading, setLoading] = useState(false);
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -79,6 +80,7 @@ const Home = () => {
       await axiosInstance.put(`/update-isFav/${storyId}`, {
         isFavourite: !storyData.isFavourite,
       });
+
       toast.success("Story updated successfully.");
       getAllTravelStories();
     } catch (error) {
@@ -171,6 +173,12 @@ const Home = () => {
     filterStoriesByDate(day);
   };
 
+  const resetFilter = () => {
+    setDateRange({ from: null, to: null });
+    setFilterType("");
+    filterStoriesByDate();
+  };
+
   useEffect(() => {
     getUserInfo();
     getAllTravelStories();
@@ -187,6 +195,14 @@ const Home = () => {
       />
 
       <div className="container mx-auto py-15 p-10">
+        <FilterInfoTitle
+          filterType={filterType}
+          filterDates={dateRange}
+          onClear={() => {
+            resetFilter();
+          }}
+        />
+
         <div className="flex gap-7">
           <div className="flex-1">
             {loading ? (
